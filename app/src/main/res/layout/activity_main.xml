@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <variable
+            name="user"
+            type="nz.co.panpanini.kotlindatabinding.model.User" />
+        <variable
+            name="presenter"
+            type="nz.co.panpanini.kotlindatabinding.ui.user.UserPresenter" />
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="nz.co.panpanini.kotlindatabinding.ui.user.UserActivity">
+
+        <EditText
+            android:id="@+id/username_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_github_username"/>
+
+        <!-- This is a bit nasty, but just to show off what we can do. -->
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_input"
+            android:text="@string/search"
+            android:onClick="@{() -> presenter.onSearchClick(usernameInput.getText().toString())}"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="50dp"
+            android:layout_below="@id/search_button"
+            >
+
+            <!-- Don't need an ID if we're not referring to the view in code -->
+            <!-- TODO: set visibility -->
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="@{user.imageUrl != null ? View.VISIBLE : View.INVISIBLE}"
+                android:padding="10dp"
+                bind:imageUrl="@{user.imageUrl}"
+                />
+
+            <!-- Name -->
+            <!-- the ?? is null check - equivalent to (user.location != null)? user.location : @string/empty -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@{user.name ?? @string/empty}"
+                />
+
+            <!-- Location -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@{(user.location != null) ? String.format(@string/location, user.location) : @string/empty}"
+                />
+
+
+            <!-- Number of public repos -->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:visibility="@{(user.numberOfRepos > 0)? View.VISIBLE : View.INVISIBLE}"
+                android:text="@{String.format(@string/number_of_repos, user.numberOfRepos)}"
+                android:onClick="@{() -> presenter.onReposClicked(usernameInput.getText().toString())}"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
+
