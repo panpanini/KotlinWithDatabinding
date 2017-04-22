@@ -26,6 +26,9 @@ android {
     }
     productFlavors {
     }
+    lintOptions {
+        abortOnFail false
+    }
 }
 
 dependencies {
